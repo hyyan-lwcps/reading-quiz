@@ -17,14 +17,13 @@
 
     body {
       min-height: 100vh;
-      /* 調整背景暗度，讓美麗的像素森林背景能更清晰地透出來 */
       background: linear-gradient(rgba(15, 32, 39, 0.35), rgba(44, 83, 100, 0.45)),
                   url('images/forest_bg.jpg') center/cover no-repeat fixed,
                   linear-gradient(135deg, #0f2027, #203a43, #2c5364);
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 20px;
+      padding: 20px 15px;
       color: #333;
     }
 
@@ -32,28 +31,36 @@
        透亮毛玻璃容器 (Glassmorphism UI)
        ========================================== */
     .glass-card {
-      background: rgba(255, 255, 255, 0.70);
+      background: rgba(255, 255, 255, 0.72);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.6);
       border-radius: 24px;
-      padding: 35px 30px;
+      padding: 32px 28px;
       width: 100%;
       max-width: 850px;
       box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
       transition: all 0.3s ease;
     }
 
-    h1, h2 {
+    h1 {
       text-align: center;
       color: #0f172a;
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #1e293b;
+      font-size: 1.3rem;
       margin-bottom: 12px;
     }
 
     .subtitle {
       text-align: center;
       color: #334155;
-      font-size: 1.05rem;
+      font-size: 1.02rem;
       margin-bottom: 25px;
       line-height: 1.6;
       font-weight: 500;
@@ -65,12 +72,12 @@
     .btn {
       display: block;
       width: 100%;
-      padding: 14px 20px;
-      margin: 12px 0;
-      background: rgba(255, 255, 255, 0.75);
-      border: 1.5px solid rgba(255, 255, 255, 0.8);
+      padding: 14px 18px;
+      margin: 10px 0;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1.5px solid rgba(255, 255, 255, 0.85);
       border-radius: 14px;
-      font-size: 1.02rem;
+      font-size: 1rem;
       font-weight: 600;
       color: #0f172a;
       cursor: pointer;
@@ -78,9 +85,10 @@
       line-height: 1.5;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
       transition: all 0.25s ease;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .btn:hover {
+    .btn:hover, .btn:active {
       background: #ffffff;
       transform: translateY(-2px);
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
@@ -97,7 +105,7 @@
       margin-top: 20px;
     }
 
-    .btn-primary:hover {
+    .btn-primary:hover, .btn-primary:active {
       background: linear-gradient(135deg, #2563eb, #1d4ed8);
       color: white;
     }
@@ -108,12 +116,13 @@
       border: 1px solid #cbd5e1;
       padding: 8px 16px;
       border-radius: 10px;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s ease;
       display: inline-block;
-      margin-bottom: 15px;
+      margin-bottom: 12px;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .btn-secondary:hover {
@@ -127,10 +136,10 @@
     .progress-bar-container {
       width: 100%;
       background: rgba(226, 232, 240, 0.6);
-      height: 10px;
+      height: 8px;
       border-radius: 10px;
       overflow: hidden;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
 
     .progress-bar {
@@ -146,30 +155,30 @@
     .badge-container {
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      margin: 12px 0 20px 0;
+      gap: 8px;
+      margin: 10px 0 16px 0;
     }
 
     .badge-card {
-      background: rgba(254, 243, 199, 0.85);
+      background: rgba(254, 243, 199, 0.88);
       border: 1px solid #f59e0b;
       border-radius: 12px;
-      padding: 10px 14px;
+      padding: 10px 12px;
       display: flex;
       flex-direction: column;
       gap: 4px;
-      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.12);
     }
 
     .badge-title {
       color: #b45309;
       font-weight: bold;
-      font-size: 1.02rem;
+      font-size: 0.98rem;
     }
 
     .badge-desc {
       color: #78350f;
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       line-height: 1.4;
     }
 
@@ -180,15 +189,14 @@
       perspective: 1200px;
       width: 100%;
       max-width: 850px;
-      margin: 20px auto;
-      min-height: 520px;
+      margin: 15px auto;
+      height: 520px;
     }
 
     .card-inner {
       position: relative;
       width: 100%;
       height: 100%;
-      min-height: 520px;
       transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
       transform-style: preserve-3d;
       cursor: pointer;
@@ -207,7 +215,7 @@
       backface-visibility: hidden;
       border-radius: 20px;
       overflow: hidden;
-      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.28);
     }
 
     /* 正面：角色介紹卡圖 */
@@ -229,62 +237,119 @@
 
     .flip-hint {
       position: absolute;
-      bottom: 16px;
+      bottom: 14px;
       background: rgba(18, 19, 28, 0.88);
       color: #FFE066;
-      padding: 8px 22px;
+      padding: 8px 18px;
       border-radius: 30px;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       font-weight: bold;
       backdrop-filter: blur(8px);
       border: 1px solid rgba(255, 224, 102, 0.5);
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
       pointer-events: none;
       animation: pulse 2s infinite;
+      text-align: center;
     }
 
     @keyframes pulse {
       0%, 100% { opacity: 0.9; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.04); }
+      50% { opacity: 1; transform: scale(1.03); }
     }
 
     /* 背面：透亮毛玻璃結果頁 */
     .card-back {
-      background: rgba(255, 255, 255, 0.72);
+      background: rgba(255, 255, 255, 0.78);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.6);
       transform: rotateY(180deg);
-      padding: 30px;
+      padding: 24px 20px;
       box-sizing: border-box;
       color: #1d2129;
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch; /* 平滑流暢觸控滾動 */
     }
 
     .flip-back-btn {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      margin-bottom: 16px;
-      padding: 8px 16px;
+      margin-bottom: 12px;
+      padding: 8px 14px;
       background: #3b82f6;
       color: white;
       border-radius: 10px;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .flip-back-btn:hover {
       background: #2563eb;
-      transform: translateY(-2px);
     }
 
+    /* ==========================================
+       📱 手機與平版響應式優化 (Mobile Responsive)
+       ========================================== */
     @media (max-width: 600px) {
-      .glass-card { padding: 20px 15px; }
-      .card-flip-container, .card-inner { min-height: 450px; }
-      .flip-hint { font-size: 0.85rem; padding: 6px 14px; }
+      body {
+        align-items: flex-start; /* 手機上避免頂端內容因垂直置中而被截斷 */
+        padding: 12px 10px;
+      }
+
+      .glass-card {
+        padding: 22px 16px;
+        border-radius: 18px;
+      }
+
+      h1 {
+        font-size: 1.45rem;
+      }
+
+      h2 {
+        font-size: 1.15rem;
+      }
+
+      .subtitle {
+        font-size: 0.92rem;
+        margin-bottom: 18px;
+      }
+
+      .btn {
+        padding: 12px 14px;
+        font-size: 0.95rem;
+        border-radius: 12px;
+      }
+
+      .btn-primary {
+        font-size: 1.05rem;
+        padding: 12px 20px;
+      }
+
+      .card-flip-container {
+        height: 480px; /* 適合手機直向螢幕的高度 */
+      }
+
+      .card-back {
+        padding: 18px 15px;
+      }
+
+      .flip-hint {
+        font-size: 0.82rem;
+        padding: 6px 14px;
+        width: 88%;
+      }
+
+      #archetypeTitle {
+        font-size: 1.35rem !important;
+      }
+
+      #archetypeTagline {
+        font-size: 0.95rem !important;
+      }
     }
   </style>
 </head>
@@ -310,9 +375,9 @@
       <div id="progress-bar" class="progress-bar"></div>
     </div>
     
-    <h2 id="question-number" style="color: #2563eb; font-size: 1.1rem; text-align: left; margin-bottom: 6px; font-weight: bold;">關卡一 / 8</h2>
-    <h1 id="question-title" style="text-align: left; font-size: 1.4rem; margin-bottom: 8px; color: #0f172a;">關卡名稱</h1>
-    <p id="question-text" style="text-align: left; font-size: 1.05rem; margin-bottom: 20px; color: #1e293b; line-height: 1.5; font-weight: 500;">情境描述...</p>
+    <h2 id="question-number" style="color: #2563eb; font-size: 1.05rem; text-align: left; margin-bottom: 4px; font-weight: bold;">關卡一 / 8</h2>
+    <h1 id="question-title" style="text-align: left; font-size: 1.3rem; margin-bottom: 6px; color: #0f172a;">關卡名稱</h1>
+    <p id="question-text" style="text-align: left; font-size: 1rem; margin-bottom: 16px; color: #1e293b; line-height: 1.5; font-weight: 500;">情境描述...</p>
     
     <div id="options-container"></div>
   </div>
@@ -321,8 +386,8 @@
        3. 測驗結果頁 (Result Page)
        ========================================== -->
   <div id="result-page" style="display: none; width: 100%; max-width: 850px;">
-    <h1 style="color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.7);">🎉 你的閱讀冒險原型誕生！</h1>
-    <p style="text-align: center; color: #f1f5f9; margin-bottom: 15px; text-shadow: 0 1px 5px rgba(0,0,0,0.6);">點擊下方卡片即可翻面查看天賦勳章、能力分析與推薦書單！</p>
+    <h1 style="color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.7); font-size: 1.5rem; text-align: center;">🎉 你的閱讀冒險原型誕生！</h1>
+    <p style="text-align: center; color: #f1f5f9; margin-bottom: 12px; text-shadow: 0 1px 5px rgba(0,0,0,0.6); font-size: 0.9rem;">點擊下方卡片即可翻面查看天賦勳章、能力分析與推薦書單！</p>
 
     <div class="card-flip-container">
       <div class="card-inner" id="resultCard" onclick="toggleCardFlip()">
@@ -339,27 +404,27 @@
             <span>↺ 翻回角色圖卡</span>
           </div>
           
-          <h2 id="archetypeTitle" style="margin-top: 5px; color: #1e3a8a; font-size: 1.7rem; text-align: left;"></h2>
-          <p id="archetypeTagline" style="font-weight: bold; color: #334155; font-size: 1.05rem; margin-bottom: 12px;"></p>
+          <h2 id="archetypeTitle" style="margin-top: 2px; color: #1e3a8a; font-size: 1.5rem; text-align: left;"></h2>
+          <p id="archetypeTagline" style="font-weight: bold; color: #334155; font-size: 0.98rem; margin-bottom: 10px;"></p>
           
           <!-- 動態天賦勳章展示區 -->
-          <h3 style="color: #1e40af; margin-top: 10px; margin-bottom: 8px;">🏅 獲得的個人閱讀天賦勳章：</h3>
+          <h3 style="color: #1e40af; margin-top: 8px; margin-bottom: 6px; font-size: 1rem;">🏅 獲得的個人閱讀天賦勳章：</h3>
           <div id="archetypeBadges" class="badge-container"></div>
 
-          <hr style="border: 0; height: 1px; background: rgba(0,0,0,0.15); margin: 15px 0;">
+          <hr style="border: 0; height: 1px; background: rgba(0,0,0,0.15); margin: 12px 0;">
           
-          <h3 style="color: #1e40af; margin-bottom: 8px;">🛡️ 閱讀原型特質分析：</h3>
-          <p id="archetypeDesc" style="line-height: 1.6; font-size: 0.98rem; color: #1e293b; margin-bottom: 18px; font-weight: 500;"></p>
+          <h3 style="color: #1e40af; margin-bottom: 6px; font-size: 1rem;">🛡️ 閱讀原型特質分析：</h3>
+          <p id="archetypeDesc" style="line-height: 1.55; font-size: 0.92rem; color: #1e293b; margin-bottom: 14px; font-weight: 500;"></p>
 
-          <h3 style="color: #1e40af; margin-bottom: 8px;">📚 專屬圖書館推薦書單：</h3>
-          <ul id="archetypeBooks" style="line-height: 1.8; font-size: 1rem; color: #0f172a; padding-left: 22px; font-weight: 600;"></ul>
+          <h3 style="color: #1e40af; margin-bottom: 6px; font-size: 1rem;">📚 專屬圖書館推薦書單：</h3>
+          <ul id="archetypeBooks" style="line-height: 1.7; font-size: 0.95rem; color: #0f172a; padding-left: 20px; font-weight: 600;"></ul>
         </div>
 
       </div>
     </div>
 
-    <div style="text-align: center; margin-top: 20px;">
-      <button onclick="restartQuiz()" class="btn btn-primary" style="display: inline-block; width: auto; padding: 12px 35px;">🔄 重新進行冒險測驗</button>
+    <div style="text-align: center; margin-top: 15px;">
+      <button onclick="restartQuiz()" class="btn btn-primary" style="display: inline-block; width: auto; padding: 10px 28px; font-size: 1rem;">🔄 重新進行冒險測驗</button>
     </div>
   </div>
 
@@ -411,7 +476,7 @@
       }
     };
 
-    // 2. 四大原型 8 道測驗題目（已移除括號文字）
+    // 2. 四大原型 8 道測驗題目
     const questions = [
       {
         title: "關卡一：【入口傳送門】",
@@ -485,7 +550,7 @@
         text: "晚上大家圍在營火旁，隊長請大家分享今天的探險收獲，你最想用什麼方式展現？",
         options: [
           { text: "✂️ 【手作機關】：把我看到的酷炫場景做成立體地圖、祕密口袋或旋轉盤。", type: "detective", badgeKey: "inventor" },
-          { text: "🗣️️ 【熱情講述】：興奮地跟夥伴口頭分享這本書有多精彩、哪個部分最搞笑。", type: "storyteller", badgeKey: "bard" },
+          { text: "🗣 【熱情講述】：興奮地跟夥伴口頭分享這本書有多精彩、哪個部分最搞笑。", type: "storyteller", badgeKey: "bard" },
           { text: "📝 【秘密信件】：寫在自己的筆記本裡，或者給故事裡的主角寫一封信。", type: "scholar" },
           { text: "🎭 【角色扮演】：演一段故事裡最熱血、最經典的對話給夥伴看。", type: "knight", badgeKey: "bard" }
         ]
@@ -608,24 +673,20 @@
       let scores = { knight: 0, detective: 0, scholar: 0, storyteller: 0 };
       let unlockedBadgeKeys = new Set();
 
-      // 根據最終的 userAnswers 重新精確計算
       userAnswers.forEach(opt => {
         if (!opt) return;
 
-        // 累計職業分數
         if (opt.types && Array.isArray(opt.types)) {
           opt.types.forEach(t => scores[t]++);
         } else if (opt.type) {
           scores[opt.type]++;
         }
 
-        // 解鎖天賦勳章
         if (opt.badgeKey) {
           unlockedBadgeKeys.add(opt.badgeKey);
         }
       });
 
-      // 找出最高分的角色
       let winningArchetype = 'knight';
       let maxScore = -1;
       for (const archetype in scores) {
@@ -637,15 +698,11 @@
 
       const data = archetypesData[winningArchetype];
 
-      // 1. 填入正面角色圖
       document.getElementById('archetypeImage').src = data.image;
-
-      // 2. 填入背面文字與書單
       document.getElementById('archetypeTitle').innerText = data.title;
       document.getElementById('archetypeTagline').innerText = data.tagline;
       document.getElementById('archetypeDesc').innerText = data.desc;
 
-      // 3. 動態渲染獲得的天賦勳章
       const badgesContainer = document.getElementById('archetypeBadges');
       badgesContainer.innerHTML = '';
 
@@ -672,7 +729,6 @@
         badgesContainer.appendChild(card);
       }
 
-      // 4. 渲染推薦書單
       const bookList = document.getElementById('archetypeBooks');
       bookList.innerHTML = '';
       data.books.forEach(book => {
@@ -681,12 +737,12 @@
         bookList.appendChild(li);
       });
 
-      // 確保卡片一開始在正面
       document.getElementById('resultCard').classList.remove('is-flipped');
-
-      // 切換顯示結果頁面
       document.getElementById('quiz-page').style.display = 'none';
       document.getElementById('result-page').style.display = 'block';
+
+      // 智慧捲動至頁面頂端
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     // 卡片 3D 翻轉切換
@@ -699,6 +755,7 @@
     function restartQuiz() {
       document.getElementById('result-page').style.display = 'none';
       document.getElementById('start-page').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   </script>
 </body>
