@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>閱讀小探險家：書境森林大冒險</title>
+  <style>
+    /* ==========================================
+       全局樣式與森林背景圖
+       ========================================== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      /* 調整背景暗度，讓美麗的像素森林背景能更清晰地透出來 */
+      background: linear-gradient(rgba(15, 32, 39, 0.35), rgba(44, 83, 100, 0.45)),
+                  url('images/forest_bg.jpg') center/cover no-repeat fixed,
+                  linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      color: #333;
+    }
+
+    /* ==========================================
+       透亮毛玻璃容器 (Glassmorphism UI)
+       ========================================== */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.70);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 24px;
+      padding: 35px 30px;
+      width: 100%;
+      max-width: 850px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+      transition: all 0.3s ease;
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #0f172a;
+      margin-bottom: 12px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #334155;
+      font-size: 1.05rem;
+      margin-bottom: 25px;
+      line-height: 1.6;
+      font-weight: 500;
+    }
+
+    /* ==========================================
+       選項與按鈕樣式
+       ========================================== */
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 14px 20px;
+      margin: 12px 0;
+      background: rgba(255, 255, 255, 0.75);
+      border: 1.5px solid rgba(255, 255, 255, 0.8);
+      border-radius: 14px;
+      font-size: 1.02rem;
+      font-weight: 600;
+      color: #0f172a;
+      cursor: pointer;
+      text-align: left;
+      line-height: 1.5;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: all 0.25s ease;
+    }
+
+    .btn:hover {
+      background: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+      border-color: #3b82f6;
+      color: #1d4ed8;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: white;
+      text-align: center;
+      font-size: 1.15rem;
+      border: none;
+      margin-top: 20px;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: rgba(226, 232, 240, 0.85);
+      color: #334155;
+      border: 1px solid #cbd5e1;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-block;
+      margin-bottom: 15px;
+    }
+
+    .btn-secondary:hover {
+      background: #cbd5e1;
+      color: #0f172a;
+    }
+
+    /* ==========================================
+       進度條
+       ========================================== */
+    .progress-bar-container {
+      width: 100%;
+      background: rgba(226, 232, 240, 0.6);
+      height: 10px;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #10b981, #3b82f6);
+      transition: width 0.4s ease;
+    }
+
+    /* ==========================================
+       動態天賦勳章列表 (Talent Badges List)
+       ========================================== */
+    .badge-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 12px 0 20px 0;
+    }
+
+    .badge-card {
+      background: rgba(254, 243, 199, 0.85);
+      border: 1px solid #f59e0b;
+      border-radius: 12px;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
+    }
+
+    .badge-title {
+      color: #b45309;
+      font-weight: bold;
+      font-size: 1.02rem;
+    }
+
+    .badge-desc {
+      color: #78350f;
+      font-size: 0.88rem;
+      line-height: 1.4;
+    }
+
+    /* ==========================================
+       3D 卡片翻轉效果 (Card Flip UI)
+       ========================================== */
+    .card-flip-container {
+      perspective: 1200px;
+      width: 100%;
+      max-width: 850px;
+      margin: 20px auto;
+      min-height: 520px;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-height: 520px;
+      transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
+      transform-style: preserve-3d;
+      cursor: pointer;
+      border-radius: 20px;
+    }
+
+    .card-inner.is-flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+    }
+
+    /* 正面：角色介紹卡圖 */
+    .card-front {
+      background-color: #12131C;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border: 2px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .card-front img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 18px;
+    }
+
+    .flip-hint {
+      position: absolute;
+      bottom: 16px;
+      background: rgba(18, 19, 28, 0.88);
+      color: #FFE066;
+      padding: 8px 22px;
+      border-radius: 30px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 224, 102, 0.5);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      pointer-events: none;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.9; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.04); }
+    }
+
+    /* 背面：透亮毛玻璃結果頁 */
+    .card-back {
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      transform: rotateY(180deg);
+      padding: 30px;
+      box-sizing: border-box;
+      color: #1d2129;
+      overflow-y: auto;
+    }
+
+    .flip-back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 16px;
+      padding: 8px 16px;
+      background: #3b82f6;
+      color: white;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .flip-back-btn:hover {
+      background: #2563eb;
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 600px) {
+      .glass-card { padding: 20px 15px; }
+      .card-flip-container, .card-inner { min-height: 450px; }
+      .flip-hint { font-size: 0.85rem; padding: 6px 14px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================
+       1. 開始首頁 (Start Page)
+       ========================================== -->
+  <div id="start-page" class="glass-card">
+    <h1>🌲 閱讀小探險家 🌲</h1>
+    <h2>── 書境森林大冒險 ──</h2>
+    <p class="subtitle">【探險前言】<br>歡迎來到「書境森林」！你是一位剛剛踏上旅程的閱讀探險家。請跟著故事腳步完成這趟冒險，選出最符合你第一直覺的選項，解鎖專屬於你的閱讀角色與天賦勳章吧！</p>
+    <button class="btn btn-primary" onclick="startQuiz()">⚔️ 開啟閱讀大冒險 (共 8 關)</button>
+  </div>
+
+  <!-- ==========================================
+       2. 測驗問題頁 (Quiz Page - 8 Questions)
+       ========================================== -->
+  <div id="quiz-page" class="glass-card" style="display: none;">
+    <button id="prev-btn" class="btn-secondary" onclick="prevQuestion()" style="display: none;">⬅️ 返回上一題</button>
+    
+    <div class="progress-bar-container">
+      <div id="progress-bar" class="progress-bar"></div>
+    </div>
+    
+    <h2 id="question-number" style="color: #2563eb; font-size: 1.1rem; text-align: left; margin-bottom: 6px; font-weight: bold;">關卡一 / 8</h2>
+    <h1 id="question-title" style="text-align: left; font-size: 1.4rem; margin-bottom: 8px; color: #0f172a;">關卡名稱</h1>
+    <p id="question-text" style="text-align: left; font-size: 1.05rem; margin-bottom: 20px; color: #1e293b; line-height: 1.5; font-weight: 500;">情境描述...</p>
+    
+    <div id="options-container"></div>
+  </div>
+
+  <!-- ==========================================
+       3. 測驗結果頁 (Result Page)
+       ========================================== -->
+  <div id="result-page" style="display: none; width: 100%; max-width: 850px;">
+    <h1 style="color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.7);">🎉 你的閱讀冒險原型誕生！</h1>
+    <p style="text-align: center; color: #f1f5f9; margin-bottom: 15px; text-shadow: 0 1px 5px rgba(0,0,0,0.6);">點擊下方卡片即可翻面查看天賦勳章、能力分析與推薦書單！</p>
+
+    <div class="card-flip-container">
+      <div class="card-inner" id="resultCard" onclick="toggleCardFlip()">
+        
+        <!-- 卡片正面：角色介紹卡圖 -->
+        <div class="card-front">
+          <img id="archetypeImage" src="" alt="角色介紹卡">
+          <div class="flip-hint">✨ 點擊卡片翻轉查看天賦勳章與推薦書單 🔄</div>
+        </div>
+
+        <!-- 卡片背面：透亮毛玻璃結果頁 -->
+        <div class="card-back">
+          <div class="flip-back-btn" onclick="event.stopPropagation(); toggleCardFlip();">
+            <span>↺ 翻回角色圖卡</span>
+          </div>
+          
+          <h2 id="archetypeTitle" style="margin-top: 5px; color: #1e3a8a; font-size: 1.7rem; text-align: left;"></h2>
+          <p id="archetypeTagline" style="font-weight: bold; color: #334155; font-size: 1.05rem; margin-bottom: 12px;"></p>
+          
+          <!-- 動態天賦勳章展示區 -->
+          <h3 style="color: #1e40af; margin-top: 10px; margin-bottom: 8px;">🏅 獲得的個人閱讀天賦勳章：</h3>
+          <div id="archetypeBadges" class="badge-container"></div>
+
+          <hr style="border: 0; height: 1px; background: rgba(0,0,0,0.15); margin: 15px 0;">
+          
+          <h3 style="color: #1e40af; margin-bottom: 8px;">🛡️ 閱讀原型特質分析：</h3>
+          <p id="archetypeDesc" style="line-height: 1.6; font-size: 0.98rem; color: #1e293b; margin-bottom: 18px; font-weight: 500;"></p>
+
+          <h3 style="color: #1e40af; margin-bottom: 8px;">📚 專屬圖書館推薦書單：</h3>
+          <ul id="archetypeBooks" style="line-height: 1.8; font-size: 1rem; color: #0f172a; padding-left: 22px; font-weight: 600;"></ul>
+        </div>
+
+      </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 20px;">
+      <button onclick="restartQuiz()" class="btn btn-primary" style="display: inline-block; width: auto; padding: 12px 35px;">🔄 重新進行冒險測驗</button>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       4. 腳本邏輯 (JavaScript)
+       ========================================== -->
+  <script>
+    // 1. 四大原型基本資料
+    const archetypesData = {
+      knight: {
+        title: "🏰 星空奇幻騎士 (Astral Fantasy Knight)",
+        tagline: "融合騎士精神與故事魔法",
+        image: "images/knight.jpg",
+        desc: "你擁有強大的正義感與豐富的想像力！能夠深深融入長篇故事的冒險世界中，展現堅韌的閱讀專注力，並從魔法與英雄故事中汲取勇氣與創造力。",
+        books: [
+          "《神奇柑仔店》系列",
+          "《老鼠記者》系列"
+        ]
+      },
+      detective: {
+        title: "🔍 蛛絲馬跡神探 (Silk Trace Master Detective)",
+        tagline: "融合觀察與演繹技巧",
+        image: "images/detective.jpg",
+        desc: "你的心思細密、觀察入微！閱讀時擅長捕捉文章細節、上下文脈絡與圖表線索，像偵探一樣推敲故事背後的真相，享受解開謎團的成就感。",
+        books: [
+          "《魔幻偵探所》系列",
+          "《便祕偵探》系列"
+        ]
+      },
+      scholar: {
+        title: "🚀 萬物百科學者 (Encyclopedic Scholar)",
+        tagline: "融合多樣知識累積技巧與百科全書級智力",
+        image: "images/scholar.jpg",
+        desc: "你對世界充滿好奇心！不論是自然科學、歷史人文還是生活常識，都能像海綿一樣快速吸收知識，建立起專屬於自己的百科知識庫。",
+        books: [
+          "《達克比辦案》系列",
+          "《普通兄妹》知識漫畫系列"
+        ]
+      },
+      storyteller: {
+        title: "🐾 溫暖森林說書人 (Warm Forest Storyteller)",
+        tagline: "融合生動分享技巧與想像力同理心智力",
+        image: "images/storyteller.jpg",
+        desc: "你擁有極高的情感共鳴能力！能深刻感受故事角色的喜怒哀樂與內心感受，並善於用溫暖、生動的方式將故事體驗分享給身邊的朋友與家人。",
+        books: [
+          "《山雨小學》系列",
+          "《貓巧可》系列"
+        ]
+      }
+    };
+
+    // 2. 四大原型 8 道測驗題目（已移除括號文字）
+    const questions = [
+      {
+        title: "關卡一：【入口傳送門】",
+        text: "你來到了森林入口，眼前有四扇閃閃發光的傳送門，你最想推開哪一扇？",
+        options: [
+          { text: "🏰 【古堡之門】：門後傳來魔法陣的光芒，還有飛龍與騎士的呼喚。", type: "knight" },
+          { text: "🔍 【密室之門】：門上鎖著複雜的齒輪，藏著百年沒人解開的謎團。", type: "detective" },
+          { text: "🐾 【樹屋之門】：門後傳來歡笑聲，住著會說話的動物小鎮居民。", type: "storyteller" },
+          { text: "🚀 【星際之門】：門外連接著未來太空站，滿是恐龍化石與宇宙奧秘。", type: "scholar" }
+        ]
+      },
+      {
+        title: "關卡二：【召喚守護精靈】",
+        text: "踏入傳送門後，你召喚了一隻靈魂小精靈，你最希望牠擁有什麼神奇能力？",
+        options: [
+          { text: "🎭 【變身幻術】：帶我飛進故事裡變身主角，體驗超刺激又好玩的冒險！", type: "knight" },
+          { text: "💡 【博學光芒】：隨時解答我對這個世界的所有「為什麼」，變身酷知識通！", type: "scholar" },
+          { text: "🗣 【情報廣播】：告訴我大家現在最流行、討論度最高的書，讓我和夥伴有聊不完的話題！", type: "storyteller" },
+          { text: "🏆 【勳章記錄】：幫我記下所有完成的挑戰，協助我拿到最多的榮譽勳章與獎勵！", type: "detective" }
+        ]
+      },
+      {
+        title: "關卡三：【路邊的神奇手冊】",
+        text: "你在小路上撿到一本神秘手冊，你最希望翻開時裡面是什麼樣子？",
+        options: [
+          { text: "🎨 【漫畫圖卡】：滿滿的精美漫畫與對話框，圖多字少，閱讀起來超輕鬆！", type: "storyteller", badgeKey: "visual" },
+          { text: "🖼️ 【插圖故事】：字數剛剛好，每一頁都有可愛精緻的插圖幫忙想像。", type: "detective" },
+          { text: "📚 【純文字密碼】：字數很多、情節豐富的高級魔法書，就算圖片少我也看得津津有味。", types: ["knight", "scholar"], badgeKey: "rune" }
+        ]
+      },
+      {
+        title: "關卡四：【休息站的 10 分鐘】",
+        text: "探險隊隊長宣布在樹蔭下「原地休息 10 分鐘」，這時候你會？",
+        options: [
+          { text: "⏱️ 【立刻翻開手冊】：就算只有 10 分鐘，我也能迅速看個短篇故事或幾頁書，時間完全不浪費！", types: ["detective", "scholar"], badgeKey: "flash" },
+          { text: "📖 【留到晚上營地】：10 分鐘太短了！我喜歡等晚上回到帳篷、安靜無人時再一次看個痛快。", type: "knight", badgeKey: "diver" },
+          { text: "🎒 【先跑去玩別的】：先去抓蝴蝶或聊天，除非隊長特別提醒「現在是閱讀時間」，我才會打開書。", type: "storyteller" }
+        ]
+      },
+      {
+        title: "關卡五：【叉路口的寶藏書】",
+        text: "來到四叉路口，路標上記錄著四本傳說中的寶藏書，你最想拿走哪一本？",
+        options: [
+          { text: "🏰 【古堡】：《穿越時空的魔法騎士》", type: "knight" },
+          { text: "🔍 【密室】：《消失的寶藏：名偵探的挑戰書》", type: "detective" },
+          { text: "🐾 【樹屋】：《流浪小狗的冒險日記》", type: "storyteller" },
+          { text: "🚀 【星際】：《100個你不知道的宇宙酷知識》", type: "scholar" }
+        ]
+      },
+      {
+        title: "關卡六：【魔法能量瓶狀態】",
+        text: "看課外書能幫你的「冒險能量瓶」充電！回想過去這一星期，你的能量瓶狀態是？",
+        options: [
+          { text: "⚡ 【能量爆棚】：天天都在充電！能量多到隨時可以發射魔法。", types: ["knight", "scholar"] },
+          { text: "🌿 【電量穩定】：一星期充個兩三次電，保持在剛剛好的狀態。", type: "detective" },
+          { text: "🌱 【正在尋寶】：電量稍微有點低，我還在尋找能讓我快速充電的神奇魔藥。", type: "storyteller" }
+        ]
+      },
+      {
+        title: "關卡七：【遇上迷霧難關】",
+        text: "路上遇到了濃霧迷宮，就像看書時遇到看不懂的難字或複雜情節，你會怎麼做？",
+        options: [
+          { text: "💡 【發揮直覺】：順著前後文用猜的，繼續順暢看下去！", type: "knight", badgeKey: "smooth" },
+          { text: "🔍 【求助導師】：跑去問身邊的大人、老師，或是查字典把意思搞懂。", type: "scholar", badgeKey: "archaeologist" },
+          { text: "⏭ 【快速跳過】：直接跳過看不懂的那幾行或那一段，繼續看後面的精彩情節。", type: "detective", badgeKey: "smooth" },
+          { text: "🛑 【暫停休息】：覺得有點累或太難，可能會先放下這本書去換另一本。", type: "storyteller" }
+        ]
+      },
+      {
+        title: "關卡八：【營火晚會的展現】",
+        text: "晚上大家圍在營火旁，隊長請大家分享今天的探險收獲，你最想用什麼方式展現？",
+        options: [
+          { text: "✂️ 【手作機關】：把我看到的酷炫場景做成立體地圖、祕密口袋或旋轉盤。", type: "detective", badgeKey: "inventor" },
+          { text: "🗣️️ 【熱情講述】：興奮地跟夥伴口頭分享這本書有多精彩、哪個部分最搞笑。", type: "storyteller", badgeKey: "bard" },
+          { text: "📝 【秘密信件】：寫在自己的筆記本裡，或者給故事裡的主角寫一封信。", type: "scholar" },
+          { text: "🎭 【角色扮演】：演一段故事裡最熱血、最經典的對話給夥伴看。", type: "knight", badgeKey: "bard" }
+        ]
+      }
+    ];
+
+    // 3. 天賦勳章數據庫
+    const badgeDefinitions = {
+      flash: {
+        title: "⏱️ 【閃電神行俠】",
+        desc: "善用 5-10 分鐘碎片時間閱讀，隨時隨地能進入書本世界。"
+      },
+      diver: {
+        title: "📖 【深度潛航者】",
+        desc: "喜歡長時間安靜閱讀，專注力與閱讀持久力極佳。"
+      },
+      visual: {
+        title: "🎨 【視覺魔導士】",
+        desc: "圖畫敏銳度高，圖像思考能力強，Lapbook 美化擔當。"
+      },
+      rune: {
+        title: "📚 【符文解密家】",
+        desc: "文字耐受度高，能直接閱讀大量文字的初級章節小說。"
+      },
+      smooth: {
+        title: "💡 【流暢冒險家】",
+        desc: "閱讀流暢度高，善於連結前後文推測意涵，不輕易被難字卡住。"
+      },
+      archaeologist: {
+        title: "🔍 【嚴謹考古學家】",
+        desc: "求知欲強，遇到不懂的字詞一定會發問或查證到底。"
+      },
+      inventor: {
+        title: "✂ 【機關發明家】",
+        desc: "手作動手能力強，對 Lapbook 的立體紙藝機關充滿熱情。"
+      },
+      bard: {
+        title: "🗣️ 【熱情吟遊詩人】",
+        desc: "善於口頭分享與角色扮演，是讀書會中的氣氛帶動者。"
+      }
+    };
+
+    // 全局狀態變數
+    let currentQuestionIndex = 0;
+    let userAnswers = [];
+
+    // 開始測驗
+    function startQuiz() {
+      currentQuestionIndex = 0;
+      userAnswers = [];
+      
+      document.getElementById('start-page').style.display = 'none';
+      document.getElementById('result-page').style.display = 'none';
+      document.getElementById('quiz-page').style.display = 'block';
+      loadQuestion();
+    }
+
+    // 載入問題
+    function loadQuestion() {
+      const q = questions[currentQuestionIndex];
+      document.getElementById('question-number').innerText = `關卡 ${currentQuestionIndex + 1} / ${questions.length}`;
+      document.getElementById('question-title').innerText = q.title;
+      document.getElementById('question-text').innerText = q.text;
+      
+      // 控制「返回上一題」按鈕顯隱
+      const prevBtn = document.getElementById('prev-btn');
+      if (currentQuestionIndex > 0) {
+        prevBtn.style.display = 'inline-block';
+      } else {
+        prevBtn.style.display = 'none';
+      }
+
+      // 更新進度條
+      const progressPercent = ((currentQuestionIndex + 1) / questions.length) * 100;
+      document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+
+      // 渲染選項
+      const optionsContainer = document.getElementById('options-container');
+      optionsContainer.innerHTML = '';
+      
+      q.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'btn';
+        
+        // 若該題之前已經選擇過，高亮顯示該選項
+        if (userAnswers[currentQuestionIndex] === opt) {
+          btn.style.borderColor = '#3b82f6';
+          btn.style.backgroundColor = '#eff6ff';
+          btn.style.color = '#1d4ed8';
+        }
+
+        btn.innerText = opt.text;
+        btn.onclick = () => selectOption(opt);
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    // 選擇選項並推進下一題
+    function selectOption(opt) {
+      userAnswers[currentQuestionIndex] = opt;
+      currentQuestionIndex++;
+
+      if (currentQuestionIndex < questions.length) {
+        loadQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    // 返回上一題功能
+    function prevQuestion() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        loadQuestion();
+      }
+    }
+
+    // 計算總分與動態解鎖勳章並顯示結果
+    function showResult() {
+      let scores = { knight: 0, detective: 0, scholar: 0, storyteller: 0 };
+      let unlockedBadgeKeys = new Set();
+
+      // 根據最終的 userAnswers 重新精確計算
+      userAnswers.forEach(opt => {
+        if (!opt) return;
+
+        // 累計職業分數
+        if (opt.types && Array.isArray(opt.types)) {
+          opt.types.forEach(t => scores[t]++);
+        } else if (opt.type) {
+          scores[opt.type]++;
+        }
+
+        // 解鎖天賦勳章
+        if (opt.badgeKey) {
+          unlockedBadgeKeys.add(opt.badgeKey);
+        }
+      });
+
+      // 找出最高分的角色
+      let winningArchetype = 'knight';
+      let maxScore = -1;
+      for (const archetype in scores) {
+        if (scores[archetype] > maxScore) {
+          maxScore = scores[archetype];
+          winningArchetype = archetype;
+        }
+      }
+
+      const data = archetypesData[winningArchetype];
+
+      // 1. 填入正面角色圖
+      document.getElementById('archetypeImage').src = data.image;
+
+      // 2. 填入背面文字與書單
+      document.getElementById('archetypeTitle').innerText = data.title;
+      document.getElementById('archetypeTagline').innerText = data.tagline;
+      document.getElementById('archetypeDesc').innerText = data.desc;
+
+      // 3. 動態渲染獲得的天賦勳章
+      const badgesContainer = document.getElementById('archetypeBadges');
+      badgesContainer.innerHTML = '';
+
+      if (unlockedBadgeKeys.size > 0) {
+        unlockedBadgeKeys.forEach(key => {
+          const badge = badgeDefinitions[key];
+          if (badge) {
+            const card = document.createElement('div');
+            card.className = 'badge-card';
+            card.innerHTML = `
+              <div class="badge-title">${badge.title}</div>
+              <div class="badge-desc">${badge.desc}</div>
+            `;
+            badgesContainer.appendChild(card);
+          }
+        });
+      } else {
+        const card = document.createElement('div');
+        card.className = 'badge-card';
+        card.innerHTML = `
+          <div class="badge-title">🌱 【潛力閱讀探索者】</div>
+          <div class="badge-desc">正在書境森林中享受獨特的閱讀旅程，充滿無限探索潛力！</div>
+        `;
+        badgesContainer.appendChild(card);
+      }
+
+      // 4. 渲染推薦書單
+      const bookList = document.getElementById('archetypeBooks');
+      bookList.innerHTML = '';
+      data.books.forEach(book => {
+        const li = document.createElement('li');
+        li.innerText = book;
+        bookList.appendChild(li);
+      });
+
+      // 確保卡片一開始在正面
+      document.getElementById('resultCard').classList.remove('is-flipped');
+
+      // 切換顯示結果頁面
+      document.getElementById('quiz-page').style.display = 'none';
+      document.getElementById('result-page').style.display = 'block';
+    }
+
+    // 卡片 3D 翻轉切換
+    function toggleCardFlip() {
+      const card = document.getElementById('resultCard');
+      card.classList.toggle('is-flipped');
+    }
+
+    // 重新測驗
+    function restartQuiz() {
+      document.getElementById('result-page').style.display = 'none';
+      document.getElementById('start-page').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
