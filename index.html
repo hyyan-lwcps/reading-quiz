@@ -17,7 +17,6 @@
 
     body {
       min-height: 100vh;
-      /* 背景融入深森林綠與溫暖木棕的暗色遮罩 */
       background: linear-gradient(rgba(18, 38, 28, 0.45), rgba(45, 35, 20, 0.55)),
                   url('images/forest_bg.jpg') center/cover no-repeat fixed,
                   linear-gradient(135deg, #0f2027, #1b3a2b, #2d4a3e);
@@ -64,7 +63,7 @@
     }
 
     /* ==========================================
-       選項與按鈕樣式 (森林綠 & 原木棕風格)
+       選項與按鈕樣式
        ========================================== */
     .btn {
       display: block;
@@ -125,9 +124,7 @@
       color: #2c221e;
     }
 
-    /* ==========================================
-       進度條 (嫩芽綠 ➔ 苔蘚綠)
-       ========================================== */
+    /* 進度條 */
     .progress-bar-container {
       width: 100%;
       background: rgba(220, 215, 200, 0.6);
@@ -144,9 +141,7 @@
       transition: width 0.4s ease;
     }
 
-    /* ==========================================
-       動態天賦勳章列表 (暖羊皮紙與樹皮棕卡片)
-       ========================================== */
+    /* 動態天賦勳章列表 */
     .badge-container {
       display: flex;
       flex-direction: column;
@@ -178,10 +173,11 @@
     }
 
     /* ==========================================
-       3D 卡片翻轉效果 (Card Flip UI)
+       3D 卡片翻轉效果 (修正 iOS / Safari 相容性)
        ========================================== */
     .card-flip-container {
       perspective: 1200px;
+      -webkit-perspective: 1200px;
       width: 100%;
       max-width: 850px;
       margin: 20px auto;
@@ -194,17 +190,22 @@
       height: 100%;
       min-height: 520px;
       transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
+      -webkit-transition: -webkit-transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
       transform-style: preserve-3d;
+      -webkit-transform-style: preserve-3d;
       cursor: pointer;
       border-radius: 20px;
     }
 
     .card-inner.is-flipped {
       transform: rotateY(180deg);
+      -webkit-transform: rotateY(180deg);
     }
 
     .card-front, .card-back {
       position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
       -webkit-backface-visibility: hidden;
@@ -214,7 +215,7 @@
       box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
     }
 
-    /* 正面：角色介紹卡圖 */
+    /* 正面：角色介紹卡圖 (加上 iOS 專用 translateZ 加速與明確定位) */
     .card-front {
       background-color: #12131C;
       display: flex;
@@ -222,13 +223,17 @@
       justify-content: center;
       align-items: center;
       border: 2px solid rgba(255, 255, 255, 0.25);
+      transform: rotateY(0deg) translateZ(1px);
+      -webkit-transform: rotateY(0deg) translateZ(1px);
     }
 
     .card-front img {
       width: 100%;
       height: 100%;
+      max-height: 500px;
       object-fit: contain;
       border-radius: 18px;
+      display: block;
     }
 
     .flip-hint {
@@ -245,6 +250,7 @@
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
       pointer-events: none;
       animation: pulse 2s infinite;
+      z-index: 10;
     }
 
     @keyframes pulse {
@@ -254,11 +260,12 @@
 
     /* 背面：透亮毛玻璃結果頁 */
     .card-back {
-      background: rgba(253, 251, 247, 0.78);
+      background: rgba(253, 251, 247, 0.85);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.7);
-      transform: rotateY(180deg);
+      transform: rotateY(180deg) translateZ(1px);
+      -webkit-transform: rotateY(180deg) translateZ(1px);
       padding: 30px;
       box-sizing: border-box;
       color: #2c3531;
@@ -294,9 +301,7 @@
 </head>
 <body>
 
-  <!-- ==========================================
-       1. 開始首頁 (Start Page)
-       ========================================== -->
+  <!-- 1. 開始首頁 -->
   <div id="start-page" class="glass-card">
     <h1>🌲 閱讀小探險家 🌲</h1>
     <h2>── 書境森林大冒險 ──</h2>
@@ -309,9 +314,7 @@
     <button class="btn btn-primary" onclick="startQuiz()">⚔️ 開啟閱讀大冒險 (共 8 關)</button>
   </div>
 
-  <!-- ==========================================
-       2. 測驗問題頁 (Quiz Page - 8 Questions)
-       ========================================== -->
+  <!-- 2. 測驗問題頁 -->
   <div id="quiz-page" class="glass-card" style="display: none;">
     <button id="prev-btn" class="btn-secondary" onclick="prevQuestion()" style="display: none;">⬅️ 返回上一題</button>
     
@@ -326,9 +329,7 @@
     <div id="options-container"></div>
   </div>
 
-  <!-- ==========================================
-       3. 測驗結果頁 (Result Page)
-       ========================================== -->
+  <!-- 3. 測驗結果頁 -->
   <div id="result-page" style="display: none; width: 100%; max-width: 850px;">
     <h1 style="color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.7);">🎉 你的閱讀冒險原型誕生！</h1>
     <p style="text-align: center; color: #f1f5f9; margin-bottom: 15px; text-shadow: 0 1px 5px rgba(0,0,0,0.6);">點擊下方卡片即可翻面查看天賦勳章、能力分析與推薦書單！</p>
@@ -351,7 +352,6 @@
           <h2 id="archetypeTitle" style="margin-top: 5px; color: #1b4332; font-size: 1.7rem; text-align: left;"></h2>
           <p id="archetypeTagline" style="font-weight: bold; color: #582f0e; font-size: 1.05rem; margin-bottom: 12px;"></p>
           
-          <!-- 動態天賦勳章展示區 -->
           <h3 style="color: #2d6a4f; margin-top: 10px; margin-bottom: 8px;">🏅 獲得的個人閱讀天賦勳章：</h3>
           <div id="archetypeBadges" class="badge-container"></div>
 
@@ -372,65 +372,48 @@
     </div>
   </div>
 
-  <!-- ==========================================
-       4. 腳本邏輯 (JavaScript)
-       ========================================== -->
+  <!-- 4. 腳本邏輯 -->
   <script>
-    // 1. 五大原型基本資料 (每角色 2 個精選系列)
+    // 1. 五大原型基本資料 (請確認 images/ 目錄中檔案名稱完全一致)
     const archetypesData = {
       knight: {
         title: "🏰 星空奇幻騎士 (Astral Fantasy Knight)",
         tagline: "融合騎士精神與故事魔法",
         image: "images/knight.jpg",
         desc: "你擁有強大的正義感與豐富的想像力！能夠深深融入長篇故事的冒險世界中，展現堅韌的閱讀專注力，並從魔法與英雄故事中汲取勇氣與創造力。",
-        books: [
-          "《神奇柑仔店》系列",
-          "《老鼠記者》系列"
-        ]
+        books: ["《神奇柑仔店》系列", "《老鼠記者》系列"]
       },
       detective: {
         title: "🔍 蛛絲馬跡神探 (Silk Trace Master Detective)",
         tagline: "融合觀察與演繹技巧",
         image: "images/detective.jpg",
         desc: "你的心思細密、觀察入微！閱讀時擅長捕捉文章細節、上下文脈絡與圖表線索，像偵探一樣推敲故事背後的真相，享受解開謎團的成就感。",
-        books: [
-          "《魔幻偵探所》系列",
-          "《便祕偵探》系列"
-        ]
+        books: ["《魔幻偵探所》系列", "《便祕偵探》系列"]
       },
       steam: {
         title: "🤖 奇想 STEAM 學者 (Whimsical STEAM Scholar)",
         tagline: "融合科學探索與邏輯構造",
         image: "images/scholar.jpg",
         desc: "你對萬物運作原理充滿好奇心！善於將科學、技術、工程、藝術與數學連結，喜歡探索百科圖鑑與實驗，把抽象知識轉化為具體創新。",
-        books: [
-          "《達克比辦案》系列",
-          "《妙妙貓圖解生活科學》系列"
-        ]
+        books: ["《達克比辦案》系列", "《妙妙貓圖解生活科學》系列"]
       },
       roamer: {
         title: "🏛️ 文明時空漫遊者 (Temporal Civilization Roamer)",
         tagline: "融合文明探索與時空穿梭",
         image: "images/roamer.jpg",
         desc: "你胸懷世界與歷史時空！喜歡探索歷史偉人、古老文明與異國采風，像時空漫遊者一樣在知識長廊中穿梭，提取古今智慧。",
-        books: [
-          "《尋寶記》系列",
-          "《世界史偵探柯南》系列"
-        ]
+        books: ["《尋寶記》系列", "《世界史偵探柯南》系列"]
       },
       storyteller: {
         title: "🎨 溫暖森林說書人 (Warm Forest Storyteller)",
         tagline: "融合繪本美感與情感同理",
         image: "images/storyteller.jpg",
         desc: "你擁有細緻的情感感應力與視覺美感！能深刻體驗故事中的喜怒哀樂，並善於用溫柔生動的方式將感動傳遞給身邊的每一個人。",
-        books: [
-          "《山雨小學》系列",
-          "《貓巧可》系列"
-        ]
+        books: ["《山雨小學》系列", "《貓巧可》系列"]
       }
     };
 
-    // 2. 8 道關卡題目與選項數據
+    // 2. 關卡問題數據
     const questions = [
       {
         title: "關卡一：【入口傳送門】",
@@ -518,122 +501,67 @@
       }
     ];
 
-    // 3. 天賦勳章數據庫
+    // 3. 天賦勳章定義
     const badgeDefinitions = {
-      diver: {
-        title: "⏱️ 【深度潛航者】",
-        desc: "沉浸於長篇閱讀，具備優異的專注力與持久力。"
-      },
-      flash: {
-        title: "⚡ 【閃電神行俠】",
-        desc: "善用碎片時間，快速吸收多元小知識。"
-      },
-      visual: {
-        title: "🎨 【視覺美學家】",
-        desc: "對圖像與美感極具敏銳度，善於透過視覺輔助理解。"
-      },
-      marathon: {
-        title: "🏃 【閱讀馬拉松】",
-        desc: "保持每日閱讀好習慣，能量源源不絕。"
-      },
-      analyst: {
-        title: "🔬 【精讀分析師】",
-        desc: "閱讀字斟句酌、注重細節與深度理解。"
-      },
-      lock: {
-        title: "🎯 【主題鎖定者】",
-        desc: "遇到喜愛主題時展現強烈探索熱情，暴風式吸收。"
-      },
-      roamer_badge: {
-        title: "🍃 【隨心漫遊者】",
-        desc: "以輕鬆的心情享受閱讀樂趣，隨心所欲探索書海。"
-      },
-      smooth: {
-        title: "💡 【流暢冒險家】",
-        desc: "善於連結上下文，保持順暢不卡關的閱讀節奏。"
-      },
-      rigorous: {
-        title: "🔍 【嚴謹探求者】",
-        desc: "求知慾強，遇到不懂的字詞必追查到底。"
-      },
-      map: {
-        title: "🗺️ 【時空地圖師】",
-        desc: "善於對照背景資料與地圖，建構宏觀知識架構。"
-      },
-      bard: {
-        title: "🎭 【星空演繹家】",
-        desc: "具備極佳的展現力，善於透過口語與表演感染他人。"
-      },
-      inventor: {
-        title: "✂️ 【機關發明家】",
-        desc: "動手能力極強，能將閱讀收穫轉化為實體紙藝機關。"
-      },
-      explorer: {
-        title: "🔬 【萬物探究家】",
-        desc: "實證精神強，喜歡用科學實驗演示書中原理。"
-      }
+      diver: { title: "⏱️ 【深度潛航者】", desc: "沉浸於長篇閱讀，具備優異的專注力與持久力。" },
+      flash: { title: "⚡ 【閃電神行俠】", desc: "善用碎片時間，快速吸收多元小知識。" },
+      visual: { title: "🎨 【視覺美學家】", desc: "對圖像與美感極具敏銳度，善於透過視覺輔助理解。" },
+      marathon: { title: "🏃 【閱讀馬拉松】", desc: "保持每日閱讀好習慣，能量源源不絕。" },
+      analyst: { title: "🔬 【精讀分析師】", desc: "閱讀字斟句酌、注重細節與深度理解。" },
+      lock: { title: "🎯 【主題鎖定者】", desc: "遇到喜愛主題時展現強烈探索熱情，暴風式吸收。" },
+      roamer_badge: { title: "🍃 【隨心漫遊者】", desc: "以輕鬆的心情享受閱讀樂趣，隨心所欲探索書海。" },
+      smooth: { title: "💡 【流暢冒險家】", desc: "善於連結上下文，保持順暢不卡關的閱讀節奏。" },
+      rigorous: { title: "🔍 【嚴謹探求者】", desc: "求知慾強，遇到不懂的字詞必追查到底。" },
+      map: { title: "🗺️ 【時空地圖師】", desc: "善於對照背景資料與地圖，建構宏觀知識架構。" },
+      bard: { title: "🎭 【星空演繹家】", desc: "具備極佳的展現力，善於透過口語與表演感染他人。" },
+      inventor: { title: "✂️ 【機關發明家】", desc: "動手能力極強，能將閱讀收穫轉化為實體紙藝機關。" },
+      explorer: { title: "🔬 【萬物探究家】", desc: "實證精神強，喜歡用科學實驗演示書中原理。" }
     };
 
-    // 全局狀態變數
     let currentQuestionIndex = 0;
     let userAnswers = [];
 
-    // 開始測驗
     function startQuiz() {
       currentQuestionIndex = 0;
       userAnswers = [];
-      
       document.getElementById('start-page').style.display = 'none';
       document.getElementById('result-page').style.display = 'none';
       document.getElementById('quiz-page').style.display = 'block';
       loadQuestion();
     }
 
-    // 載入問題
     function loadQuestion() {
       const q = questions[currentQuestionIndex];
       document.getElementById('question-number').innerText = `關卡 ${currentQuestionIndex + 1} / ${questions.length}`;
       document.getElementById('question-title').innerText = q.title;
       document.getElementById('question-text').innerText = q.text;
       
-      // 控制「返回上一題」按鈕顯隱
       const prevBtn = document.getElementById('prev-btn');
-      if (currentQuestionIndex > 0) {
-        prevBtn.style.display = 'inline-block';
-      } else {
-        prevBtn.style.display = 'none';
-      }
+      prevBtn.style.display = (currentQuestionIndex > 0) ? 'inline-block' : 'none';
 
-      // 更新進度條
       const progressPercent = ((currentQuestionIndex + 1) / questions.length) * 100;
       document.getElementById('progress-bar').style.width = `${progressPercent}%`;
 
-      // 渲染選項
       const optionsContainer = document.getElementById('options-container');
       optionsContainer.innerHTML = '';
       
       q.options.forEach(opt => {
         const btn = document.createElement('button');
         btn.className = 'btn';
-        
-        // 若該題之前已經選擇過，高亮顯示該選項 (綠色主題)
         if (userAnswers[currentQuestionIndex] === opt) {
           btn.style.borderColor = '#2d6a4f';
           btn.style.backgroundColor = '#f0f7f3';
           btn.style.color = '#1b4332';
         }
-
         btn.innerText = opt.text;
         btn.onclick = () => selectOption(opt);
         optionsContainer.appendChild(btn);
       });
     }
 
-    // 選擇選項並推進下一題
     function selectOption(opt) {
       userAnswers[currentQuestionIndex] = opt;
       currentQuestionIndex++;
-
       if (currentQuestionIndex < questions.length) {
         loadQuestion();
       } else {
@@ -641,7 +569,6 @@
       }
     }
 
-    // 返回上一題功能
     function prevQuestion() {
       if (currentQuestionIndex > 0) {
         currentQuestionIndex--;
@@ -649,25 +576,16 @@
       }
     }
 
-    // 計算總分與動態解鎖勳章並顯示結果
     function showResult() {
       let scores = { knight: 0, detective: 0, steam: 0, roamer: 0, storyteller: 0 };
       let unlockedBadgeKeys = new Set();
 
-      // 精確累計分數與解鎖天賦勳章
       userAnswers.forEach(opt => {
         if (!opt) return;
-
-        if (opt.type) {
-          scores[opt.type]++;
-        }
-
-        if (opt.badgeKey) {
-          unlockedBadgeKeys.add(opt.badgeKey);
-        }
+        if (opt.type) scores[opt.type]++;
+        if (opt.badgeKey) unlockedBadgeKeys.add(opt.badgeKey);
       });
 
-      // 找出最高分的角色原型
       let winningArchetype = 'knight';
       let maxScore = -1;
       for (const archetype in scores) {
@@ -679,15 +597,17 @@
 
       const data = archetypesData[winningArchetype];
 
-      // 1. 填入正面角色圖
-      document.getElementById('archetypeImage').src = data.image;
+      // 載入圖片並設置偵錯提醒
+      const imgEl = document.getElementById('archetypeImage');
+      imgEl.src = data.image;
+      imgEl.onerror = function() {
+        console.warn("⚠️ 圖片無法載入，請檢查檔名與路徑：", data.image);
+      };
 
-      // 2. 填入背面文字與書單
       document.getElementById('archetypeTitle').innerText = data.title;
       document.getElementById('archetypeTagline').innerText = data.tagline;
       document.getElementById('archetypeDesc').innerText = data.desc;
 
-      // 3. 動態渲染獲得的天賦勳章
       const badgesContainer = document.getElementById('archetypeBadges');
       badgesContainer.innerHTML = '';
 
@@ -714,7 +634,6 @@
         badgesContainer.appendChild(card);
       }
 
-      // 4. 渲染推薦書單
       const bookList = document.getElementById('archetypeBooks');
       bookList.innerHTML = '';
       data.books.forEach(book => {
@@ -723,21 +642,16 @@
         bookList.appendChild(li);
       });
 
-      // 確保卡片顯示時預設為正面
       document.getElementById('resultCard').classList.remove('is-flipped');
-
-      // 切換顯示結果頁面
       document.getElementById('quiz-page').style.display = 'none';
       document.getElementById('result-page').style.display = 'block';
     }
 
-    // 卡片 3D 翻轉切換
     function toggleCardFlip() {
       const card = document.getElementById('resultCard');
       card.classList.toggle('is-flipped');
     }
 
-    // 重新測驗
     function restartQuiz() {
       document.getElementById('result-page').style.display = 'none';
       document.getElementById('start-page').style.display = 'block';
