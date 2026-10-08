@@ -422,4 +422,326 @@
       },
       roamer: {
         title: "🏛️ 文明時空漫遊者 (Temporal Civilization Roamer)",
-        tagline: "融合
+        tagline: "融合文明探索與時空穿梭",
+        image: "images/roamer.jpg",
+        desc: "你胸懷世界與歷史時空！喜歡探索歷史偉人、古老文明與異國采風，像時空漫遊者一樣在知識長廊中穿梭，提取古今智慧。",
+        books: ["《尋寶記》系列", "《世界史偵探柯南》系列"]
+      },
+      storyteller: {
+        title: "🎨 溫暖森林說書人 (Warm Forest Storyteller)",
+        tagline: "融合繪本美感與情感同理",
+        image: "images/storyteller.jpg",
+        desc: "你擁有細緻的情感感應力與視覺美感！能深刻體驗故事中的喜怒哀樂，並善於用溫柔生動的方式將感動傳遞給身邊的每一個人。",
+        books: ["《山雨小學》系列", "《貓巧可》系列"]
+      }
+    };
+
+    // 2. 關卡問題數據
+    const questions = [
+      {
+        title: "關卡一：【入口傳送門】",
+        text: "森林隊長：「眼前出現了五座發光的傳送門，門後隱約傳來不同的聲音，你最想踏入哪一座？」",
+        options: [
+          { text: "🏰 光輝劍影之門：門後傳來熱血的戰鬥聲與魔法咆哮，似乎有一場驚心動魄的冒險正等著你。", type: "knight" },
+          { text: "🔍 密室齒輪之門：門後有微弱的光線與鎖鏈聲，地上散落著奇怪的符號，等待你去解開真相。", type: "detective" },
+          { text: "🤖 未來實驗之門：門後飄著奇妙的煙霧與機械運轉聲，各式各樣的儀器正在高速運作。", type: "steam" },
+          { text: "🏛️ 時空長廊之門：門後飄著古老圖書與沙塵香氣，能看見遠方雄偉的古堡與金字塔影姿。", type: "roamer" },
+          { text: "🎨 森林樹屋之門：門後傳來柔和的琴聲與說故事聲，伴隨溫暖的陽光與繪本色彩。", type: "storyteller" }
+        ]
+      },
+      {
+        title: "關卡二：【召喚守護精靈】",
+        text: "森林隊長：「一位精靈飛到你肩上，表示想成為你的冒險夥伴，你希望牠擁有哪種神奇力量？」",
+        options: [
+          { text: "⚔️ 變身勇者之力：能帶你飛進故事情節裡，親自體驗勇者斬妖除魔的刺激故事。", type: "knight" },
+          { text: "🔎 細節透視之眼：能幫你發現書頁中隱藏的微小線索，快速理清錯綜複雜的謎團。", type: "detective" },
+          { text: "⚡ 萬物運作之光：能將書裡抽象的科學原理與高科技，變成眼前活生生的實驗演示。", type: "steam" },
+          { text: "📜 時空隨身聽：能隨時播放歷史偉人與異國文明的故事，帶你穿梭過去與未來。", type: "roamer" },
+          { text: "🖌️ 情感調色盤：機能感應書本中的喜怒哀樂，並用溫暖的色彩將感動畫給身邊的人。", type: "storyteller" }
+        ]
+      },
+      {
+        title: "關卡三：【神奇手冊】",
+        text: "森林隊長：「你在樹洞裡找到一本厚厚的神奇書籍，你最希望這本書呈現什麼樣子？」",
+        options: [
+          { text: "📖 情節緊湊的高字量小說：印滿精采文字，讓人一打開就想一口氣追看到最後完結。", type: "knight" },
+          { text: "🧩 充滿迷宮與密碼的圖解冊：印滿推理邏輯圖表、暗號與細節地圖，需要邊讀邊動腦。", type: "detective" },
+          { text: "🔬 立體結構與科普圖鑑：帶有各種構造解剖圖、科學實驗數據與機械原理圖解。", type: "steam" },
+          { text: "🗺️ 古老地圖與歷史手稿：記載著不同年代的地理采風、文明發展與偉人傳記。", type: "roamer" },
+          { text: "🎨 畫風細緻的經典繪本：擁有精美的插圖與溫馨的畫面，字不多但每一頁都充滿情感。", type: "storyteller" }
+        ]
+      },
+      {
+        title: "關卡四：【休息 10 分鐘】",
+        text: "森林隊長：「走累了，在營地休息 10 分鐘時，你會如何運用這短暫的時間？」",
+        options: [
+          { text: "沉浸其中，趕緊打開長篇小說多看幾頁。", badgeKey: "diver" },
+          { text: "迅速翻閱短篇科普或知識漫畫，快速吸收小知識。", badgeKey: "flash" },
+          { text: "輕鬆欣賞繪本或美術書上的精美插圖。", badgeKey: "visual" },
+          { text: "閉上眼睛放空，或是觀察四周的森林風景。", badgeKey: null }
+        ]
+      },
+      {
+        title: "關卡五：【叉路口的寶藏書】",
+        text: "森林隊長：「走到了森林分岔路，五座寶箱裡各裝著一本寶藏書，你會選擇帶走哪一本？」",
+        options: [
+          { text: "🐉 《龍與魔法戰記》：描寫騎士為了正義與同伴勇敢冒險的熱血故事。", type: "knight" },
+          { text: "🕵️ 《神探怪盜大對決》：充滿隱藏線索、不讀到最後一刻不知道真相的推理故事。", type: "detective" },
+          { text: "🚀 《AI 與宇宙奧秘百科》：探索黑洞、機器人與未來科技運作方式的科普大典。", type: "steam" },
+          { text: "🏺 《文明失落的古遺跡》：紀錄埃及金字塔、古羅馬與世界歷史變遷的探索日記。", type: "roamer" },
+          { text: "🌸 《森林裡的小熊郵差》：傳遞愛、關懷與友情，讓人讀完全心裡暖洋洋的圖文故事。", type: "storyteller" }
+        ]
+      },
+      {
+        title: "關卡六：【魔法能量瓶狀態】",
+        text: "森林隊長：「你的閱讀魔法能量瓶平時是如何補充能量的呢？」",
+        options: [
+          { text: "每天都要看書，只要一天不看就覺得怪怪的。", badgeKey: "marathon" },
+          { text: "不必每天看，但只要開始讀，就會仔細字斟句酌看得很透徹。", badgeKey: "analyst" },
+          { text: "遇到特別喜歡的熱門主題時，才會突然暴風式一口氣看完。", badgeKey: "lock" },
+          { text: "看心情隨意翻翻，把看書當作放鬆心情的娛樂活動。", badgeKey: "roamer_badge" }
+        ]
+      },
+      {
+        title: "關卡七：【遇上迷霧難關】",
+        text: "森林隊長：「閱讀時如果遇到看不懂的詞語或複雜情節（進入迷霧區），你會怎麼辦？」",
+        options: [
+          { text: "不卡關，順著前後文的劇情脈絡繼續往下猜。", badgeKey: "smooth" },
+          { text: "停下來查字典、上網搜尋或立刻問大人搞懂。", badgeKey: "rigorous" },
+          { text: "去翻找相關的歷史背景資料或地圖來對照。", badgeKey: "map" },
+          { text: "看看旁邊的插圖輔助理解，或者換一本比較順眼的繪本讀。", badgeKey: "visual" }
+        ]
+      },
+      {
+        title: "關卡八：【營火晚會的展現】",
+        text: "森林隊長：「冒險結束了！夜幕降臨，在星空下的營火晚會上，你最想用什麼方式和大家分享你的收穫？」",
+        options: [
+          { text: "充滿感情地把書裡最刺激、最感動的情節演講或表演給大家聽。", badgeKey: "bard" },
+          { text: "把書裡的密碼或地圖做成精美的紙藝機關，讓大家來挑戰。", badgeKey: "inventor" },
+          { text: "帶來一個簡單的小實驗或自然現象演示，展示書中的科學原理。", badgeKey: "explorer" },
+          { text: "用溫柔平和的語氣，拿著繪本一頁頁念給同伴聽，分享溫暖的心情。", badgeKey: "bard" }
+        ]
+      }
+    ];
+
+    // 3. 天賦勳章定義
+    const badgeDefinitions = {
+      diver: { title: "⏱️ 【深度潛航者】", desc: "沉浸於長篇閱讀，具備優異的專注力與持久力。" },
+      flash: { title: "⚡ 【閃電神行俠】", desc: "善用碎片時間，快速吸收多元小知識。" },
+      visual: { title: "🎨 【視覺美學家】", desc: "對圖像與美感極具敏銳度，善於透過視覺輔助理解。" },
+      marathon: { title: "🏃 【閱讀馬拉松】", desc: "保持每日閱讀好習慣，能量源源不絕。" },
+      analyst: { title: "🔬 【精讀分析師】", desc: "閱讀字斟句酌、注重細節與深度理解。" },
+      lock: { title: "🎯 【主題鎖定者】", desc: "遇到喜愛主題時展現強烈探索熱情，暴風式吸收。" },
+      roamer_badge: { title: "🍃 【隨心漫遊者】", desc: "以輕鬆的心情享受閱讀樂趣，隨心所欲探索書海。" },
+      smooth: { title: "💡 【流暢冒險家】", desc: "善於連結上下文，保持順暢不卡關的閱讀節奏。" },
+      rigorous: { title: "🔍 【嚴謹探求者】", desc: "求知慾強，遇到不懂的字詞必追查到底。" },
+      map: { title: "🗺️ 【時空地圖師】", desc: "善於對照背景資料與地圖，建構宏觀知識架構。" },
+      bard: { title: "🎭 【星空演繹家】", desc: "具備極佳的展現力，善於透過口語與表演感染他人。" },
+      inventor: { title: "✂️ 【機關發明家】", desc: "動手能力極強，能將閱讀收穫轉化為實體紙藝機關。" },
+      explorer: { title: "🔬 【萬物探究家】", desc: "實證精神強，喜歡用科學實驗演示書中原理。" }
+    };
+
+    let currentQuestionIndex = 0;
+    let userAnswers = [];
+
+    // 純淨語音過濾器：過濾 Emoji 與特殊符號 【 】
+    function cleanForTTS(text) {
+      if (!text) return '';
+      return text
+        .replace(/[^\u4e00-\u9fa5a-zA-Z0-9，。！？：；「」『』\s]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    // 停止朗讀
+    function stopSpeech() {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const audioBtn = document.getElementById('audio-btn');
+        if (audioBtn) audioBtn.innerText = '🔊 朗讀題目與選項';
+      }
+    }
+
+    // 開啟 / 停止朗讀
+    function toggleAudioSpeech() {
+      if (!('speechSynthesis' in window)) {
+        alert('抱歉，此瀏覽器不支援語音朗讀功能。');
+        return;
+      }
+
+      if (window.speechSynthesis.speaking) {
+        stopSpeech();
+        return;
+      }
+
+      const q = questions[currentQuestionIndex];
+      const cleanTitle = cleanForTTS(q.title);
+      const cleanText = cleanForTTS(q.text);
+
+      let textToRead = `${cleanTitle}。${cleanText}。`;
+      q.options.forEach((opt, idx) => {
+        const cleanOpt = cleanForTTS(opt.text);
+        textToRead += `選項 ${idx + 1}：${cleanOpt}。`;
+      });
+
+      const utterance = new SpeechSynthesisUtterance(textToRead);
+      utterance.lang = 'zh-HK'; // 可設為 zh-HK (粵語) 或 zh-TW (國語)
+      utterance.rate = 0.88; // 放慢語速
+
+      const audioBtn = document.getElementById('audio-btn');
+      audioBtn.innerText = '⏹️ 停止朗讀';
+
+      utterance.onend = function() {
+        audioBtn.innerText = '🔊 朗讀題目與選項';
+      };
+
+      utterance.onerror = function() {
+        audioBtn.innerText = '🔊 朗讀題目與選項';
+      };
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function startQuiz() {
+      stopSpeech();
+      currentQuestionIndex = 0;
+      userAnswers = [];
+      document.getElementById('start-page').style.display = 'none';
+      document.getElementById('result-page').style.display = 'none';
+      document.getElementById('quiz-page').style.display = 'block';
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      stopSpeech();
+      const q = questions[currentQuestionIndex];
+      document.getElementById('question-number').innerText = `關卡 ${currentQuestionIndex + 1} / ${questions.length}`;
+      document.getElementById('question-title').innerText = q.title;
+      document.getElementById('question-text').innerText = q.text;
+      
+      const prevBtn = document.getElementById('prev-btn');
+      prevBtn.style.display = (currentQuestionIndex > 0) ? 'inline-block' : 'none';
+
+      const progressPercent = ((currentQuestionIndex + 1) / questions.length) * 100;
+      document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+
+      const optionsContainer = document.getElementById('options-container');
+      optionsContainer.innerHTML = '';
+      
+      q.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'btn';
+        if (userAnswers[currentQuestionIndex] === opt) {
+          btn.style.borderColor = '#2d6a4f';
+          btn.style.backgroundColor = '#f0f7f3';
+          btn.style.color = '#1b4332';
+        }
+        btn.innerText = opt.text;
+        btn.onclick = () => selectOption(opt);
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function selectOption(opt) {
+      stopSpeech();
+      userAnswers[currentQuestionIndex] = opt;
+      currentQuestionIndex++;
+      if (currentQuestionIndex < questions.length) {
+        loadQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function prevQuestion() {
+      stopSpeech();
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        loadQuestion();
+      }
+    }
+
+    function showResult() {
+      stopSpeech();
+      let scores = { knight: 0, detective: 0, steam: 0, roamer: 0, storyteller: 0 };
+      let unlockedBadgeKeys = new Set();
+
+      userAnswers.forEach(opt => {
+        if (!opt) return;
+        if (opt.type) scores[opt.type]++;
+        if (opt.badgeKey) unlockedBadgeKeys.add(opt.badgeKey);
+      });
+
+      let winningArchetype = 'knight';
+      let maxScore = -1;
+      for (const archetype in scores) {
+        if (scores[archetype] > maxScore) {
+          maxScore = scores[archetype];
+          winningArchetype = archetype;
+        }
+      }
+
+      const data = archetypesData[winningArchetype];
+
+      const imgEl = document.getElementById('archetypeImage');
+      imgEl.src = data.image;
+      imgEl.onerror = function() {
+        console.warn("⚠️ 圖片無法載入，請檢查檔名與路徑：", data.image);
+      };
+
+      document.getElementById('archetypeTitle').innerText = data.title;
+      document.getElementById('archetypeTagline').innerText = data.tagline;
+      document.getElementById('archetypeDesc').innerText = data.desc;
+
+      const badgesContainer = document.getElementById('archetypeBadges');
+      badgesContainer.innerHTML = '';
+
+      if (unlockedBadgeKeys.size > 0) {
+        unlockedBadgeKeys.forEach(key => {
+          const badge = badgeDefinitions[key];
+          if (badge) {
+            const card = document.createElement('div');
+            card.className = 'badge-card';
+            card.innerHTML = `
+              <div class="badge-title">${badge.title}</div>
+              <div class="badge-desc">${badge.desc}</div>
+            `;
+            badgesContainer.appendChild(card);
+          }
+        });
+      } else {
+        const card = document.createElement('div');
+        card.className = 'badge-card';
+        card.innerHTML = `
+          <div class="badge-title">🌱 【自由漫遊探索者】</div>
+          <div class="badge-desc">以靈活自如的節奏享受閱讀樂趣，充滿無限探險潛力！</div>
+        `;
+        badgesContainer.appendChild(card);
+      }
+
+      const bookList = document.getElementById('archetypeBooks');
+      bookList.innerHTML = '';
+      data.books.forEach(book => {
+        const li = document.createElement('li');
+        li.innerText = book;
+        bookList.appendChild(li);
+      });
+
+      document.getElementById('resultCard').classList.remove('is-flipped');
+      document.getElementById('quiz-page').style.display = 'none';
+      document.getElementById('result-page').style.display = 'block';
+    }
+
+    function toggleCardFlip() {
+      const card = document.getElementById('resultCard');
+      card.classList.toggle('is-flipped');
+    }
+
+    function restartQuiz() {
+      stopSpeech();
+      document.getElementById('result-page').style.display = 'none';
+      document.getElementById('start-page').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
