@@ -124,6 +124,28 @@
       color: #2c221e;
     }
 
+    /* 聲音朗讀按鈕樣式 */
+    .btn-audio {
+      background: #2d6a4f;
+      color: white;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.88rem;
+      font-weight: bold;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+      transition: all 0.2s ease;
+    }
+
+    .btn-audio:hover {
+      background: #1b4332;
+      transform: scale(1.03);
+    }
+
     /* 進度條 */
     .progress-bar-container {
       width: 100%;
@@ -173,7 +195,7 @@
     }
 
     /* ==========================================
-       3D 卡片翻轉效果 (修正 iOS / Safari 相容性)
+       3D 卡片翻轉效果 (iOS / Safari 相容性)
        ========================================== */
     .card-flip-container {
       perspective: 1200px;
@@ -215,7 +237,6 @@
       box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
     }
 
-    /* 正面：角色介紹卡圖 (加上 iOS 專用 translateZ 加速與明確定位) */
     .card-front {
       background-color: #12131C;
       display: flex;
@@ -258,7 +279,6 @@
       50% { opacity: 1; transform: scale(1.04); }
     }
 
-    /* 背面：透亮毛玻璃結果頁 */
     .card-back {
       background: rgba(253, 251, 247, 0.85);
       backdrop-filter: blur(12px);
@@ -316,7 +336,10 @@
 
   <!-- 2. 測驗問題頁 -->
   <div id="quiz-page" class="glass-card" style="display: none;">
-    <button id="prev-btn" class="btn-secondary" onclick="prevQuestion()" style="display: none;">⬅️ 返回上一題</button>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+      <button id="prev-btn" class="btn-secondary" onclick="prevQuestion()" style="display: none; margin-bottom: 0;">⬅️ 返回上一題</button>
+      <button id="audio-btn" class="btn-audio" onclick="toggleAudioSpeech()">🔊 朗讀題目與選項</button>
+    </div>
     
     <div class="progress-bar-container">
       <div id="progress-bar" class="progress-bar"></div>
@@ -374,7 +397,7 @@
 
   <!-- 4. 腳本邏輯 -->
   <script>
-    // 1. 五大原型基本資料 (請確認 images/ 目錄中檔案名稱完全一致)
+    // 1. 五大原型基本資料
     const archetypesData = {
       knight: {
         title: "🏰 星空奇幻騎士 (Astral Fantasy Knight)",
@@ -423,7 +446,7 @@
           { text: "🔍 密室齒輪之門：門後有微弱的光線與鎖鏈聲，地上散落著奇怪的符號，等待你去解開真相。", type: "detective" },
           { text: "🤖 未來實驗之門：門後飄著奇妙的煙霧與機械運轉聲，各式各樣的儀器正在高速運作。", type: "steam" },
           { text: "🏛️ 時空長廊之門：門後飄著古老圖書與沙塵香氣，能看見遠方雄偉的古堡與金字塔影姿。", type: "roamer" },
-          { text: "🎨 森林樹屋之門：門後傳來柔和的琴聲與說故事聲，伴隨著溫暖的陽光與繪本色彩。", type: "storyteller" }
+          { text: "🎨 森林樹屋之門：門後傳來柔和的琴聲與說故事聲，伴隨溫暖的陽光與繪本色彩。", type: "storyteller" }
         ]
       },
       {
@@ -521,7 +544,57 @@
     let currentQuestionIndex = 0;
     let userAnswers = [];
 
+    // 語音朗讀邏輯 (Web Speech API)
+    function stopSpeech() {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const audioBtn = document.getElementById('audio-btn');
+        if (audioBtn) audioBtn.innerText = '🔊 朗讀題目與選項';
+      }
+    }
+
+    function toggleAudioSpeech() {
+      if (!('speechSynthesis' in window)) {
+        alert('抱歉，此瀏覽器不支援語音朗讀功能。');
+        return;
+      }
+
+      if (window.speechSynthesis.speaking) {
+        stopSpeech();
+        return;
+      }
+
+      const q = questions[currentQuestionIndex];
+      // 清理表情符號以獲得更好的朗讀效果
+      const cleanTitle = q.title.replace(/[\u1F600-\u1F64F\u1F300-\u1F5FF\u1F680-\u1F6FF\u2600-\u26FF\u2700-\u27BF]/g, '');
+      const cleanText = q.text.replace(/[\u1F600-\u1F64F\u1F300-\u1F5FF\u1F680-\u1F6FF\u2600-\u26FF\u2700-\u27BF]/g, '');
+
+      let textToRead = `${cleanTitle}。${cleanText}。`;
+      q.options.forEach((opt, idx) => {
+        const cleanOpt = opt.text.replace(/[\u1F600-\u1F64F\u1F300-\u1F5FF\u1F680-\u1F6FF\u2600-\u26FF\u2700-\u27BF]/g, '');
+        textToRead += `選項 ${idx + 1}：${cleanOpt}。`;
+      });
+
+      const utterance = new SpeechSynthesisUtterance(textToRead);
+      utterance.lang = 'zh-HK'; // 可設為 zh-HK 或 zh-TW
+      utterance.rate = 0.9; // 稍微放慢語速適合小學生
+
+      const audioBtn = document.getElementById('audio-btn');
+      audioBtn.innerText = '⏹️ 停止朗讀';
+
+      utterance.onend = function() {
+        audioBtn.innerText = '🔊 朗讀題目與選項';
+      };
+
+      utterance.onerror = function() {
+        audioBtn.innerText = '🔊 朗讀題目與選項';
+      };
+
+      window.speechSynthesis.speak(utterance);
+    }
+
     function startQuiz() {
+      stopSpeech();
       currentQuestionIndex = 0;
       userAnswers = [];
       document.getElementById('start-page').style.display = 'none';
@@ -531,6 +604,7 @@
     }
 
     function loadQuestion() {
+      stopSpeech();
       const q = questions[currentQuestionIndex];
       document.getElementById('question-number').innerText = `關卡 ${currentQuestionIndex + 1} / ${questions.length}`;
       document.getElementById('question-title').innerText = q.title;
@@ -560,6 +634,7 @@
     }
 
     function selectOption(opt) {
+      stopSpeech();
       userAnswers[currentQuestionIndex] = opt;
       currentQuestionIndex++;
       if (currentQuestionIndex < questions.length) {
@@ -570,6 +645,7 @@
     }
 
     function prevQuestion() {
+      stopSpeech();
       if (currentQuestionIndex > 0) {
         currentQuestionIndex--;
         loadQuestion();
@@ -577,6 +653,7 @@
     }
 
     function showResult() {
+      stopSpeech();
       let scores = { knight: 0, detective: 0, steam: 0, roamer: 0, storyteller: 0 };
       let unlockedBadgeKeys = new Set();
 
@@ -597,7 +674,6 @@
 
       const data = archetypesData[winningArchetype];
 
-      // 載入圖片並設置偵錯提醒
       const imgEl = document.getElementById('archetypeImage');
       imgEl.src = data.image;
       imgEl.onerror = function() {
@@ -653,6 +729,7 @@
     }
 
     function restartQuiz() {
+      stopSpeech();
       document.getElementById('result-page').style.display = 'none';
       document.getElementById('start-page').style.display = 'block';
     }
